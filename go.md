@@ -87,7 +87,7 @@ func main() {
 
 func f1(array *[2]string) {
 	fmt.Printf("Array Address[%p] \n", &array)
-	array[0] = "marie"
+	*array[0] = "marie"
 }
 ```
 In Go terminology we would say that `array` is a **pointer receiver**.
