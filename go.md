@@ -2,7 +2,7 @@
 
 One of the lines you will hear over and over again as you learn go is that it is **pass by value**. This post describes how arrays are represented in memory in Go and what it means to pass by value.
 
-This post was spurred on by the fact that last week I had the opportunity to attend the [GothamGo](http://gothamgo.com/) conference here in New York which included a Go Workshop taught by [Bill Kennedy](http://www.goinggo.net/), one of the authors of [Go in Action](http://www.manning.com/ketelsen/). I really enjoyed the workshop and in particular how we discussed memory allocation of types in Go.
+This post was spurred on by the fact that last week I had the opportunity to attend the [GothamGo](http://gothamgo.com/) conference here in New York which included a Go Workshop taught by [Bill Kennedy](http://www.goinggo.net/), one of the authors of [Go in Action](http://www.manning.com/ketelsen/). The best part of the workshop was that we dove down into some of these fun lower level language details. 
 
 ### Arrays are stored contiguously in memory
 An array in Go is a container data structure of fixed length with values of a single type. The declaration below creates a zero-value array whose elements themselves are zero.
@@ -12,7 +12,7 @@ var elements [4]int
 ```
 In Go, when you declare a value of type `int` then the actual size of the `int` will be determined based on the type of architecture the program is run on. In my case I am running this program on my mac which is 64bit architecture so each `int` will be 8 bytes. It is important to note that `int` is its own type and is not an alias for `int64`. 
 
-Let's print out the address of the array in memory and of each of its elements:
+Let's print out the memory address of the array and of each of its elements. 
 ```go
 var elements [4]int
 
@@ -75,7 +75,7 @@ In Go terminology we would say that `array` is a **value receiver**.
 Copying the value of the array might be ok for small sized arrays, but what if the `names` array had millions of strings? The stack is starting to have to do a lot of work - creating and releasing megs of memory each time the `f1` function is called. Passing by value here also doesn't allow us to alter the contents of the original array.
 
 ##### Use a pointer!
-One way to overcome this would be to instead pass a pointer to the `names` array. Pointers in Go only take up 8 bytes.
+One way to overcome this would be to instead pass a pointer to the `names` array (ie. `array *[2]string`). Pointers in Go only take up 8 bytes. 
 
 ```go
 func main() {
@@ -97,11 +97,15 @@ In Go terminology we would say that `array` is a **pointer receiver**.
 By using a pointer we reduce the size of the `f1` stack frame and this also allows us to change the value that the pointer points too ie. the orginal array.
 
 ##### When do I use a `pointer` vs `value` receiver?
-If you need to modify the contents of the receiver then you need to use a `pointer`. Also if the receiver is large then you should use a `pointer` receiver to be more efficient.
+There are a couple of scenarios for when using a pointer receiver is the right choice: <br/>
+1. Modification. If you need to modify the contents of the receiver. <br/>
+2. Performance. If the receiver is large then using a `pointer` receiver will be more efficient. <br/>
 
-This has been a brief introduction into arrays internals and pass by value in Go. Next I will talk about slices!
+This has been a brief introduction into arrays internals and pass by value in Go. I've tried to use digarams to further illustrate these concepts. 
 
-## References
+Next up I will talk about slices!
+
+## References & Reading
 * [Go Data Structures](http://research.swtch.com/godata)
 * [Go Slices: usage and internals](http://blog.golang.org/go-slices-usage-and-internals)
 * [Go in Action (book)](http://www.manning.com/ketelsen/)
