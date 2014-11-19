@@ -22,7 +22,7 @@ for i, e := range el {
 	fmt.Printf("Value[%s] IndexAddr[%p] \n", e, &el[i])
 }
 
-OUTPUT:
+### OUTPUT:
 address of elements array: 0x2081ac000
 Value[0] IndexAddr[0x2081ac000]
 Value[0] IndexAddr[0x2081ac008]
@@ -66,7 +66,7 @@ func f1(array [2]string) {
 	array[0] = "marie"
 }
 
-OUTPUT
+### OUTPUT:
 Names address: 0x2081ac000
 Value: [ada lovelace] Addr: 0x2081ac040
 ada
@@ -104,6 +104,8 @@ Value 0x2081ac000 Addr: 0x2081aa020
 marie
 ```
 In Go terminology we would say that `array` is a **pointer variable**.
+
+We can see that the value of `array` is a copy of the address of `names`. The data the pointer points to is not a copy so when we set the first element to be marie, this changes the original `names` array.
 
 ![](images/call_stack_2.png)
 
