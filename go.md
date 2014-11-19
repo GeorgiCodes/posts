@@ -105,14 +105,13 @@ marie
 ```
 In Go terminology we would say that `array` is a **pointer variable**.
 
-We can see that the value of `array` is a copy of the address of `names`. The data the pointer points to is not a copy so when we set the first element to be marie, this changes the original `names` array.
+We can see that the address of `array` is `0x2081aa020` and the value is a copy of the address of `names`, `0x2081ac000`.
 
 ![](images/call_stack_2.png)
 
 By using a pointer, we reduce the size of the stack on the call to `f1` and this also allows us to change the value that the pointer points to ie. the array variable in `main`.
 
 This has been a brief introduction into arrays internals and pass by value in Go!
-
 
 ## References & Reading
 * [Go Data Structures](http://research.swtch.com/godata)
