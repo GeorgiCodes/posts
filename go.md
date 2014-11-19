@@ -73,6 +73,8 @@ ada
 ```
 In Go terminology we would say that `array` is a **value variable**.
 
+We can see that the address of `array` is `0x2081bc040` and the value is a copy of `names`, ["ada", "lovelace"].
+
 ![](images/call_stack_1.png)
 
 FIXME
