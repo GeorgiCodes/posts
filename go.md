@@ -86,21 +86,22 @@ Copying the value of the array might be ok for small sized arrays, but what if t
 ##### Use a pointer!
 One way to overcome this would be to instead pass a pointer of the `names` array. Pointers in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine with 64bit architecture the size of the word will be 8 bytes.
 ```go
-FIX ME
 func main() {
 	names := [2]string{"ada", "lovelace"}
-	fmt.Printf("Names Address[%p] \n", &names)
+	fmt.Printf("Names address: %p \n", &names)
 	f1(&names)
-	fmt.Println(names[0])	// "marie"
+	fmt.Println(names[0])
 }
 
 func f1(array *[2]string) {
-	fmt.Printf("Array Address[%p] \n", &array)
-	*array[0] = "marie"
+	fmt.Printf("Value %p Addr: %p \n", array, &array)
+	array[0] = "marie"
 }
 
 OUTPUT
-FIXME
+Names address: 0x2081ac000
+Value 0x2081ac000 Addr: 0x2081aa020
+marie
 ```
 In Go terminology we would say that `array` is a **pointer variable**.
 
