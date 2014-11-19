@@ -23,7 +23,7 @@ for i, e := range el {
 }
 
 ### OUTPUT:
-address of elements array: 0x2081ac000
+address of el array: 0x2081ac000
 Value[0] IndexAddr[0x2081ac000]
 Value[0] IndexAddr[0x2081ac008]
 Value[0] IndexAddr[0x2081ac010]
@@ -73,7 +73,7 @@ ada
 ```
 In Go terminology we would say that `array` is a **value variable**.
 
-We can see that the address of `array` is `0x2081bc040` and the value is a copy of `names`, ["ada", "lovelace"].
+We can see that the address of `array` is `0x2081bc040` and the value is a copy of `names`, `["ada", "lovelace"]`.
 
 ![](images/call_stack_1.png)
 
@@ -85,7 +85,7 @@ fix diagram AND add title AND other things
 
 Copying the value of the array might be ok for small sized arrays, but what if the `names` array had millions of strings? The stack will need to grow very large and the runtime is starting to have to do a lot of work - creating and releasing megs of memory each time the `f1` function is called. Passing by value here also doesn't allow us to share the contents of the original array so it can be modified by `f1`.
 
-##### Use a pointer!
+#### Use a pointer!
 One way to overcome this would be to instead pass a pointer of the `names` array. Pointers in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine with 64bit architecture the size of the word will be 8 bytes.
 ```go
 func main() {
@@ -100,7 +100,7 @@ func f1(array *[2]string) {
 	array[0] = "marie"
 }
 
-OUTPUT
+### OUTPUT:
 Names address: 0x2081ac000
 Value 0x2081ac000 Addr: 0x2081aa020
 marie
