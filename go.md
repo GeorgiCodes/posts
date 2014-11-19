@@ -12,7 +12,7 @@ var elements [4]int
 ```
 In Go, when you declare a value of type `int`, then the actual size of the `int` will be determined based on the type of architecture the program is run on. In my case, I am running this program on my mac which is based on a 64bit architecture. This means each `int` will be 8 bytes long. It is important to note that `int` is its own type and is not an alias for `int64`. 
 
-Let's print out the memory address of the array and of each of its elements. 
+Let's print out the memory address of the array and of each of its elements: 
 ```go
 var el [4]int
 
@@ -22,6 +22,7 @@ for i, e := range el {
 	fmt.Printf("Value[%s] IndexAddr[%p] \n", e, &el[i])
 }
 
+OUTPUT:
 address of elements array: 0x2081ac000
 Value[0] IndexAddr[0x2081ac000]
 Value[0] IndexAddr[0x2081ac008]
@@ -64,14 +65,21 @@ func f1(array [2]string) {
 	fmt.Printf("Value %s Addr: %p \n", array, &array)
 	array[0] = "marie"
 }
+
+OUTPUT
+Names address: 0x2081ac000
+Value: [ada lovelace] Addr: 0x2081ac040
+ada
 ```
 In Go terminology we would say that `array` is a **value variable**.
 
 ![](images/call_stack_1.png)
 
+FIXME
+fix diagram AND add title AND other things
 ##### There are two important things to take note of here: 
 1. A copy of the `names` array variable is made when the `f1` function is called. <br/>
-1. This means in `f1`, when we change the value of the first element, we are making a change to the copy. The local variable array inside the f1 function. <br/>
+1. This means in `f1`, when we change the value of the first element, we are making a change to the copy. The local variable `array` inside the `f1` function. <br/>
 
 Copying the value of the array might be ok for small sized arrays, but what if the `names` array had millions of strings? The stack will need to grow very large and the runtime is starting to have to do a lot of work - creating and releasing megs of memory each time the `f1` function is called. Passing by value here also doesn't allow us to share the contents of the original array so it can be modified by `f1`.
 
@@ -90,6 +98,9 @@ func f1(array *[2]string) {
 	fmt.Printf("Array Address[%p] \n", &array)
 	*array[0] = "marie"
 }
+
+OUTPUT
+FIXME
 ```
 In Go terminology we would say that `array` is a **pointer variable**.
 
