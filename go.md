@@ -37,6 +37,8 @@ Interanlly an array is stored **contiguously** in memory.
 These memory addresses are in hexadecimal with each index located 8 bytes ahead of the last. The addresses you see on your machine will likely differ to the ones shown above. 
  See [Hexadecimal to Decimal](http://www.binaryhexconverter.com/hex-to-decimal-converter) converter.
 
+### The length of the array forms part of the type
+
 In Go, the length of the array forms part of its type. The assignment below will throw an error:
 
 ```go
@@ -49,7 +51,7 @@ elements = longElements
 
 Contiguous memory has an advantage because it assists with keeping the data we are using in blocks that can potentially stay in the CPU’s caches longer. This in turn has performance benefits because the CPU doesn't have to flush the caches as often or look all the way back to RAM to access that memory. 
 
-#### Go is pass by value
+### Go is pass by value
 In Go, everything is **pass by value**. This means that when we pass an array as an argument, we pass a copy of the array not a reference to the array.
 
 Lets say we have the following program:
@@ -77,15 +79,13 @@ We can see that the address of `array` is `0x2081bc040` and the value is a copy 
 
 ![](images/call_stack_1.png)
 
-FIXME
-fix diagram AND add title AND other things
 ##### There are two important things to take note of here: 
 1. A copy of the `names` array variable is made when the `f1` function is called. <br/>
 1. This means in `f1`, when we change the value of the first element, we are making a change to the copy. The local variable `array` inside the `f1` function. <br/>
 
 Copying the value of the array might be ok for small sized arrays, but what if the `names` array had millions of strings? The stack will need to grow very large and the runtime is starting to have to do a lot of work - creating and releasing megs of memory each time the `f1` function is called. Passing by value here also doesn't allow us to share the contents of the original array so it can be modified by `f1`.
 
-#### Use a pointer!
+### Use pointer variables as function paramaters
 One way to overcome this would be to instead pass a pointer of the `names` array. Pointers in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine with 64bit architecture the size of the word will be 8 bytes.
 ```go
 func main() {
