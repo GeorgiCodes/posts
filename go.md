@@ -67,8 +67,8 @@ func f1(array [2]string) {
 }
 
 ### OUTPUT:
-Names address: 0x2081ac000
-Value: [ada lovelace] Addr: 0x2081ac040
+Names address: 0x2081bc000
+Value: [ada lovelace] Addr: 0x2081bc040
 ada
 ```
 In Go terminology we would say that `array` is a **value variable**.
