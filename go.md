@@ -108,16 +108,12 @@ In Go terminology we would say that `array` is a **pointer variable**.
 
 By using a pointer, we reduce the size of the stack on the call to `f1` and this also allows us to change the value that the pointer points to ie. the array variable in `main`.
 
-##### When do I use a `pointer` vs `value` variable?
-There are a couple of scenarios for when using a pointer variable is the right choice: <br/>
-1. Sharing. If you need to modify the contents of the variable. <br/>
-2. Performance. If the variable is large then using a `pointer` variable will be more efficient. <br/>
-
-This has been a brief introduction into arrays internals and pass by value in Go. I've tried to use diagrams to further illustrate these concepts.
+This has been a brief introduction into arrays internals and pass by value in Go!
 
 
 ## References & Reading
 * [Go Data Structures](http://research.swtch.com/godata)
 * [Understanding Pointers and Memory Allocation](http://www.goinggo.net/2013/07/understanding-pointers-and-memory.html)
+* [Pass by Value](http://golang.org/doc/faq#pass_by_value)
 * [Go Slices: usage and internals](http://blog.golang.org/go-slices-usage-and-internals)
 * [Go in Action (book)](http://www.manning.com/ketelsen/)
