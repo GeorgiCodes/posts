@@ -129,7 +129,7 @@ In Go terminology we would say that `array` is a **pointer variable**.
 
 In Listing 1.5 we can see that the address of `array` is `0x2081aa020` and the value is a copy of the address of `names`, `0x2081ac000`. When we update the first element of the array to be "marie", we actually update the value referenced in memory by the pointer.
 
-#### What does the call stack with a pointer look like?
+#### What does the call stack look like now we are using a pointer?
 Below you can see a simplified view of the call stack for Listing 1.5.
 
 ###### Figure 1.3
