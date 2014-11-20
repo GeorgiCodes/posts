@@ -15,7 +15,9 @@ Let's start off with some basics. An array in Go is a data structure that is fix
 var elements [4]int
 ```
 
-In Go, when you declare a value of type `int`, then the actual size of the `int` will be determined based on the type of architecture the program is run on. In my case, I am running this program on my mac which is based on a 64bit architecture. This means each `int` will be 8 bytes long. It is important to note that `int` is its own type and is not an alias for `int64`. 
+In Go, when you declare a value of type `int`, then the actual size of the `int` will be determined based on the type of architecture the program is run on. In my case, I am running this program on my mac which is based on a 64bit architecture. This means each `int` will be 8 bytes long. 
+
+It is important to note that `int` is its own type and is not an alias for `int64`. 
 
 One thing that surprised me when I first learnt about this, was that in Go the length of the array forms part of its type! The assignment in the code below will throw an error:
 
@@ -30,9 +32,9 @@ elements = longElements
 
 ### Arrays are stored contiguously in memory
 
-In Go, arrays are stored **contiguously** in memory. The code below prints out the memory address of the array and of each of its elements:
+In Go, arrays are stored **contiguously** in memory. The code below prints out the memory address of the array and of each of its elements.
 ###### Listing 1.3
-[(View in Go Playground](https://play.golang.org/p/CC018b-CR7)
+[(Run in Go Playground)](https://play.golang.org/p/CC018b-CR7) 
 ```go
 func main() {
 	var a [4]int
@@ -58,8 +60,7 @@ Figure 1.1 below  shows how the `a` array from Listing 1.3 looks in memory:
 ###### Figure 1.1
 ![](images/go_initialized_array.jpg)
 
-These memory addresses are in hexadecimal with each index located 8 bytes ahead of the last. The addresses you see on your machine may be different to the ones shown in Listing 1.2. 
- See [Hexadecimal to Decimal](http://www.binaryhexconverter.com/hex-to-decimal-converter) converter.
+These memory addresses are in hexadecimal with each index located 8 bytes ahead of the last. The addresses you see on your machine may be different to the ones shown in Listing 1.2. The Go Playground runs on a 32bit architrecutre so if you run Listing 1.3 there, then you will see that each index is located 4 bytes ahead of the last. See [Hexadecimal to Decimal](http://www.binaryhexconverter.com/hex-to-decimal-converter) converter.
 
 #### What does this mean?
 Creating contiguous blocks of memory has an advantage because it assists with keeping the data we are using potentially in the CPU’s caches longer. This in turn has performance benefits because the CPU doesn't have to flush the caches as often or reach all the way back into RAM to access any memory it needs. 
@@ -69,7 +70,7 @@ In Go, everything is **pass by value**. This means that when we pass an array as
 
 Lets say we have the following program:
 ###### Listing 1.4
-[View in Go Playground](https://play.golang.org/p/aPuSADQxCQ)
+[(Run in Go Playground)](https://play.golang.org/p/aPuSADQxCQ)
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
@@ -113,7 +114,7 @@ If we want to share `names` with `f1` so `f1` can modify it, we should pass the 
 
 Let's update the code from Listing 1.4 to instead use a pointer:
 ###### Listing 1.5
-[View in Go Playground](https://play.golang.org/p/dFfCCyKmuE)
+[(Run in Go Playground)](https://play.golang.org/p/dFfCCyKmuE)
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
