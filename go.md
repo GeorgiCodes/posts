@@ -152,7 +152,7 @@ Below you can see a simplified view of the call stack for the code in Listing 1.
 
 ##### By using a pointer we have achieved two things:
 1. Reduced the sized of the stack on the call to `f1`
-2. We were able to change the value that the pointer points to; the `names` variable in `main`.
+2. Changed the value that the pointer points to; the `names` variable in `main`.
 
 **NOTE:** Pointer variables in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine with 64bit architecture the size of the word will be 8 bytes. So if `names` had millions of strings, passing a pointer uses much less memory! 
 
