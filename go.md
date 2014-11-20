@@ -101,9 +101,9 @@ Passing by value of `names` doesn't allow us to share its contents such that it 
 ### Enter pointers!
 If you have not so fond memories of your C programming class at college you might be tempted to close this tab right now - but don't do it just yet - pointers aren't that scary I promise! 
 
-A pointer is simply a reference to a location in memory where a value is stored (not the value itself).
+A pointer is simply a reference to a location in memory where a value is stored (not the value itself). If we want to share `names` to `f1` so that we can modify it, we can instead pass a pointer of the `names` array. 
 
-If we want to share `names` to `f1` so that we can modify it, we can instead pass a pointer of the `names` array. Pointers in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine with 64bit architecture the size of the word will be 8 bytes. So if `names` had millions of strings, passing a pointer uses much less memory! 
+Pointers in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine with 64bit architecture the size of the word will be 8 bytes. So if `names` had millions of strings, passing a pointer uses much less memory! 
 
 Let's update the code from Listing 1.4 to instead use a pointer:
 ###### Listing 1.5
