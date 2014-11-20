@@ -3,6 +3,11 @@ package main
 import "fmt"
 
 func main() {
+	i := 5
+	ptr := &i
+	fmt.Println(ptr)
+	fmt.Println(&ptr)
+
 	names := [2]string{"ada", "lovelace"}
 	fmt.Printf("Names address: %p \n", &names)
 	// f1(names)
