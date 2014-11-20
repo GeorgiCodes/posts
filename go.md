@@ -54,7 +54,7 @@ Value[0] IndexAddr: 0x220832bef0
 Value[0] IndexAddr: 0x220832bef8
 Value[0] IndexAddr: 0x220832bf00
 ```
->>>>>>>>>>>PUT SOMETHING HERE ABOUT println stuff
+**NOTE:** You might be wondering why we used the `println` function to display 'a''s address instead of using `fmt.Printf`. Without getting into too much detail, the fmt package uses reflection which allocates values on the heap. Given that I show a simplified stack diagram below I wanted to show the sack addresses not the heap one, this is why `println` is useful. I will continue to use the `println` function for the rest of the example when showing the address. 
 
 Figure 1.1 below  shows how the `a` array from Listing 1.3 looks in memory:
 ###### Figure 1.1
