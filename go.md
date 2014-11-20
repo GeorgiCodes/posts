@@ -17,7 +17,7 @@ var elements [4]int
 
 In Go, when you declare a value of type `int`, then the actual size of the `int` will be determined based on the type of architecture the program is run on. In my case, I am running this program on my mac which is based on a 64bit architecture. This means each `int` will be 8 bytes long. If you run any of the examples I provide in the Go Playground, then each `int` will be 4 bytes long because the Go Playground runs on a 32bit architecture.
 
-It is important to note that `int` is its own type and is not an alias for `int64`. <a href="http://play.golang.org/p/sV7isYkSYH" target="_blank">(Run in Go Playground)</a>
+It is important to note that `int` is its own type and is not an alias for `int64` <a href="http://play.golang.org/p/sV7isYkSYH" target="_blank">(view in Go Playground)</a>
 One thing that surprised me when I first learnt about arrays, was that in Go the length of the array forms part of its type! The assignment in the code below will throw an error:
 
 ###### Listing 1.2
@@ -56,13 +56,13 @@ Value:0 IndexAddr: 0x220822bf28
 Value:0 IndexAddr: 0x220822bf30
 Value:0 IndexAddr: 0x220822bf38
 ```
-**NOTE:** You might be wondering why we used the `println` and `print` functions to display these addresses instead of using `fmt.Printf`. Without getting into too much detail, the fmt package uses reflection which will cause the Go compiler to allocate these values on the heap. Given that I show simplified stack diagrams below, I wanted to make sure you are seeing stack addresses, not heap addresses. I will continue to use the `println` function for the rest of the examples when showing the address. 
+**NOTE:** You might be wondering why we used the `println` and `print` functions to display these addresses instead of using `fmt.Printf`. Without getting into too much detail, the `fmt` package uses reflection which will cause the Go compiler to allocate these values on the heap. Given that I show simplified stack diagrams below, I wanted to make sure you are seeing stack addresses, not heap addresses. I will continue to use the `println` function for the rest of the examples when showing the address. 
 
 Figure 1.1 below  shows how the `a` variable from Listing 1.3 looks in memory:
 ###### Figure 1.1
 ![](images/go_initialized_array.jpg)
 
-These memory addresses are in hexadecimal with each index located 8 bytes ahead of the last. Remember, the playground is a 32bit environment. The addresses you see on your machine may be different to the ones shown in Listing 1.2. See [Hexadecimal to Decimal](http://www.binaryhexconverter.com/hex-to-decimal-converter) converter.
+These memory addresses are in hexadecimal. On my mac, each index is located 8 bytes ahead of the last. The addresses you see on your machine may be different to the ones shown in Listing 1.3 and remember if you view this in the playground, its run on 32bit architecture. See [Hexadecimal to Decimal](http://www.binaryhexconverter.com/hex-to-decimal-converter) converter.
 
 #### What does this mean?
 Creating contiguous blocks of memory has an advantage because it assists with keeping the data we are using potentially in the CPU’s caches longer. This in turn has performance benefits because the CPU doesn't have to flush the caches as often or reach all the way back into RAM to access any memory it needs. 
@@ -99,31 +99,33 @@ ada
 1. Inside `f1`, when we change the value of the first element in `a`, we are making a change to the copy: the local variable `a` inside `f1`. <br/>
 
 #### What does the call stack look like?
-In figure 1.2 below, there is a simplified view of the call stack for the code in Listing 1.4. You can see a copy of `names` is created in the `f1` stack frame and assigned to a variable called `a`, which has its own address. When `f1` returns, the stack pointer is once again pointing back to `main's` stack frame and `names` remains unchanged.
+Figure 1.2 below is a simplified view of the call stack for the code in Listing 1.4. You can see a copy of `names` is created in the `f1` stack frame and assigned to a variable called `a`, which has its own address. When `f1` returns, the stack pointer is once again pointing back to `main's` stack frame and `names` remains unchanged.
 
 ###### Figure 1.2
 ![](images/call_stack_1.png)
 
 Copying the value of the array in many cases is fine, but what if the `names` array had millions of strings? The stack will need to grow very large.
 
-Passing `names` by value doesn't allow us to share its contents such that it can be modified by `f1`, so what do we do if we want `f1` to be able to make modifications?
+**Passing `names` by value also doesn't allow us to share its contents such that it can be modified by `f1`**. So what do we do if we want `f1` to be able to modify `names`?
 
 ### Enter pointers!
 If you have not so fond memories of your C programming class at college, you might be tempted to stop reading - but don't just yet - pointers aren't that scary, I promise! 
 
-A pointer is a variable like any other variable, whose value is always an address. It references a location in memory where a value of a specified type is stored. Pointers can be used to share values between functions.
+**A pointer is a variable like any other variable, whose value is always an address.** It references a location in memory where a value of a specified type is stored. Pointers can be used to share values between functions.
 
-If we want to share `names` with `f1` so `f1` can modify it, **we should pass the address of `names` to `f1`**. Remember Go is pass by value where in this example, the value is an address.
+If we want to share `names` with `f1` so `f1` can modify it, we should pass the address of `names` to `f1`. 
+
+**Remember Go is pass by value where in this example, the value is an address.**
 
 Let's update the code from Listing 1.4 to use a pointer instead:
 ###### Listing 1.5
-<a href="http://play.golang.org/p/VBjVF8jqmm" target="_blank">(Run in Go Playground)</a>
+<a href="http://play.golang.org/p/jVoUXZcUl4" target="_blank">(Run in Go Playground)</a>
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
 	println("names address:", &names)
 	f1(&names)
-	println(names[0]) // still prints "ada"
+	println(names[0]) // prints "marie"
 }
 
 func f1(a *[2]string) {
@@ -148,13 +150,15 @@ Below you can see a simplified view of the call stack for the code in Listing 1.
 ###### Figure 1.3
 ![](images/call_stack_2.png)
 
-By using a pointer, we reduce the size of the stack on the call to `f1` and we are also able to change the value that the pointer points to; the `names` variable in `main`.
+##### By using a pointer we have achieved two things:
+1. Reduced the sized of the stack on the call to `f1`
+2. We were able to change the value that the pointer points to; the `names` variable in `main`.
 
 **NOTE:** Pointer variables in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine with 64bit architecture the size of the word will be 8 bytes. So if `names` had millions of strings, passing a pointer uses much less memory! 
 
 ### Summary
 
-This has been a brief introduction into arrays internals and pass by value in Go! We have seen that arrays in Go are contiguous in memory where length forms part of its type. We also saw two examples of pass by value. In the first example, we pass an array as an argument and see we are actually passing a copy of that array to the function. We learnt that when we wanted to share the array with the function, we could pass the address of the array and create a pointer variable so that the function could then modify the original array.
+This has been a brief introduction into arrays internals and pass by value in Go! We have seen that arrays in Go are contiguous in memory where length forms part of its type. We also saw two examples of pass by value. In the first example, we pass an array as an argument and see we are actually passing a copy of that array to the function. In the second example we learnt that when we wanted to share the array with the function, we could pass the address of the array and create a pointer variable so that the function could then modify the original array.
 
 If you want to get more involved in the Go community then come and join the [Gophers Slack group](http://blog.gopheracademy.com/gophers-slack-community/)!
 
