@@ -98,7 +98,7 @@ Copying the value of the array might be ok for small sized arrays, but what if t
 
 Passing by value of `names` doesn't allow us to share its contents such that it can be modified by `f1`.
 
-### Use pointers!
+### Enter pointers!
 If you have not so fond memories of your C programming class at college you might be tempted to close this tab right now - but don't do it just yet - pointers aren't that scary I promise! 
 
 A pointer is simply a reference to a location in memory where a value is stored (not the value itself).
