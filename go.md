@@ -67,13 +67,15 @@ Lets say we have the following program:
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
-	fmt.Printf("Names address: %p \n", &names)
+	println("Names address:", &names)
 	f1(names)
+	// f2(&names)
 	fmt.Println(names[0]) // still prints "ada"
 }
 
 func f1(array [2]string) {
-	fmt.Printf("Value %s Addr: %p \n", array, &array)
+	fmt.Printf("Value: %s ", array)
+	println("Addr:", &array)
 	array[0] = "marie"
 }
 
