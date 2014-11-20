@@ -32,8 +32,9 @@ elements = longElements
 
 In Go, arrays are stored **contiguously** in memory. The code below prints out the memory address of the array and of each of its elements:
 ###### Listing 1.3
-[view in Go Playground]() TODO: create pg link
+[(View in Go Playground](https://play.golang.org/p/CC018b-CR7)
 ```go
+func main() {
 	var a [4]int
 
 	println("a addr:", &a)
@@ -42,6 +43,7 @@ In Go, arrays are stored **contiguously** in memory. The code below prints out t
 		fmt.Printf("Value[%d] ", e)
 		println("IndexAddr:", &a[i])
 	}
+}
 
 ### OUTPUT:
 a addr: 0x220832bee8
@@ -67,7 +69,7 @@ In Go, everything is **pass by value**. This means that when we pass an array as
 
 Lets say we have the following program:
 ###### Listing 1.4
-[view in Go Playground]() TODO: create pg link
+[View in Go Playground](https://play.golang.org/p/aPuSADQxCQ)
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
@@ -111,6 +113,7 @@ If we want to share `names` with `f1` so `f1` can modify it, we should pass the 
 
 Let's update the code from Listing 1.4 to instead use a pointer:
 ###### Listing 1.5
+[View in Go Playground](https://play.golang.org/p/dFfCCyKmuE)
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
