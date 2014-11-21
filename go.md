@@ -1,4 +1,4 @@
-## Grokking Go: Array Internals and Pass by Value
+## Grokking Go: Array Internals, The Call Stack and Pass by Value
 
 One of the lines you will hear over and over again as you learn Go is that it is **pass by value**. This post describes how arrays in Go are represented in memory and what it means to pass by value.
 
