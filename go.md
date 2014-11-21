@@ -1,6 +1,6 @@
 ## Grokking Go: Array Internals, The Call Stack and Pass by Value
 
-One of the lines you will hear over and over again as you learn Go is that it is **pass by value**. This post describes how arrays in Go are represented in memory and what it means to pass by value.
+One of the lines you will hear over and over again as you learn Go is that it is **pass by value**. This post describes how arrays in Go are represented in memory, shows simplified views of the call stack in two different scenarios and explains what it means to pass by value.
 
 I was motivated to write this post because last week I had the opportunity to attend the [GothamGo](http://gothamgo.com/) conference here in New York which included a Go Workshop taught by [Bill Kennedy](http://www.goinggo.net/), one of the authors of [Go in Action](http://www.manning.com/ketelsen/). 
 
@@ -72,7 +72,7 @@ In Go, everything is **pass by value**. This means that when we pass an array as
 
 Lets say we have the following program:
 ###### Listing 1.4
-<a href="http://play.golang.org/p/7lVHHGfMDO" target="_blank">(Run in Go Playground)</a>
+<a href="http://play.golang.org/p/PgQeGEp3tr" target="_blank">(Run in Go Playground)</a>
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
@@ -85,6 +85,10 @@ func f1(a [2]string) {
 	println("value:", a[0], a[1])
 	println("a address:", &a)
 	a[0] = "marie"
+
+	// Do this to prevent inlining by the compiler.
+	var x int
+	fmt.Sprintf("Prevent Inlining: %d", x)
 }
 
 ### OUTPUT:
@@ -109,8 +113,6 @@ Copying the value of the array in many cases is fine, but what if the `names` ar
 **Passing `names` by value also doesn't allow us to share its contents such that it can be modified by `f1`**. So what do we do if we want `f1` to be able to modify `names`?
 
 ### Enter pointers!
-If you have not so fond memories of your C programming class at college, you might be tempted to stop reading - but don't just yet - pointers aren't that scary, I promise! 
-
 _A pointer is a variable like any other variable, whose value is always an address._ It references a location in memory where a value of a specified type is stored. Pointers can be used to share values between functions.
 
 If we want to share `names` with `f1` so `f1` can modify it, we should pass the address of `names` to `f1`. 
@@ -119,21 +121,26 @@ If we want to share `names` with `f1` so `f1` can modify it, we should pass the 
 
 Let's update the code from Listing 1.4 to use a pointer instead:
 ###### Listing 1.5
-<a href="http://play.golang.org/p/jVoUXZcUl4" target="_blank">(Run in Go Playground)</a>
+<a href="http://play.golang.org/p/v3DptqwTxj" target="_blank">(Run in Go Playground)</a>
 ```go
 package main
+
 
 func main() {
 	names := [2]string{"ada", "lovelace"}
 	println("names address:", &names)
 	f1(&names)
-	println(names[0]) // prints "marie"
+	println(names[0]) // now prints "marie"
 }
 
 func f1(a *[2]string) {
-	println("value:", a)
 	println("a address:", &a)
+	println("a value:", a)
 	a[0] = "marie"
+
+	// Do this to prevent inlining.
+	var x int
+	fmt.Sprintf("Prevent Inlining: %d", x)
 }
 
 ### OUTPUT:
