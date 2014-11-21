@@ -3,31 +3,34 @@ package main
 import "fmt"
 
 func main() {
-	names := [2]string{"ada", "lovelace"}
-	println("Names address:", &names)
-	f1(names)
+	arrays1()
+	// names := [2]string{"ada", "lovelace"}
+	// println("Names address:", &names)
+	// f1(names)
 	// f2(&names)
-	fmt.Println(names[0]) // still prints "ada"
+	// fmt.Println(names[0]) // still prints "ada"
 }
 
 func f1(array [2]string) {
-	fmt.Printf("Value: %s ", array)
-	println("Addr:", &array)
+	fmt.Printf("Value: %s", array)
+	println(" Addr:", &array)
 	array[0] = "marie"
 }
 
 func f2(array *[2]string) {
-	fmt.Printf("Value %p Addr: %p \n", array, &array)
+	fmt.Printf("Value: %s", array)
+	println(" Addr:", &array)
 	array[0] = "marie"
 }
 
 func arrays1() {
-	var el [4]int
+	var a [4]int
 
-	fmt.Printf("el addr: %p \n", &el)
+	println("a addr:", &a)
 
-	for i, e := range el {
-		fmt.Printf("Value[%s] IndexAddr[%p] \n", e, &el[i])
+	for i, e := range a {
+		fmt.Printf("Value[%d] ", e)
+		println("IndexAddr:", &a[i])
 	}
 }
 
