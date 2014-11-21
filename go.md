@@ -17,7 +17,7 @@ var elements [4]int
 
 In Go, when you declare a value of type `int`, then the actual size of the `int` will be determined based on the type of architecture the program is run on. In my case, I am building this program on my mac which is based on a 64bit architecture. This means each `int` will be 8 bytes long. If you build any of the examples I provide in the Go Playground, then each `int` will be 4 bytes long because the Go Playground runs on a 32bit architecture.
 
-It is important to note that `int` is its own type and is not an alias for `int64` <a href="http://play.golang.org/p/sV7isYkSYH" target="_blank">(View in Go Playground)</a>.
+It is important to note that `int` is its own type and is not an alias for `int64` <a href="http://play.golang.org/p/sV7isYkSYH" target="_blank">(Run in Go Playground)</a>.
 One thing that surprised me when I first learnt about arrays, was that in Go the length of the array forms part of its type! The assignment in the code below will throw an error:
 
 ###### Listing 1.2
