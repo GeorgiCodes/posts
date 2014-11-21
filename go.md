@@ -72,7 +72,7 @@ In Go, everything is **pass by value**. This means that when we pass an array as
 
 Lets say we have the following program:
 ###### Listing 1.4
-<a href="http://play.golang.org/p/PgQeGEp3tr" target="_blank">(Run in Go Playground)</a>
+<a href="http://play.golang.org/p/24b1yyvEyP" target="_blank">(Run in Go Playground)</a>
 ```go
 func main() {
 	names := [2]string{"ada", "lovelace"}
@@ -82,7 +82,7 @@ func main() {
 }
 
 func f1(a [2]string) {
-	println("value:", a[0], a[1])
+	println("a value:", a[0], a[1])
 	println("a address:", &a)
 	a[0] = "marie"
 
@@ -92,11 +92,12 @@ func f1(a [2]string) {
 }
 
 ### OUTPUT:
-names address: 0x220822bf08
-value: ada lovelace
-a address: 0x220822bf28
+names address: 0x220832bf28
+a value: ada lovelace
+a address: 0x220832bf08
 ada
 ```
+**NOTE:** I have included two lines at the end of the code sample in Listing 1.4 and 1.5 that prevent the compiler from inling the `f1` function. Without getting into too much detail, I did this because in Figure 1.2 and 1.3 I wanted to show a simplified view of the call stack. I didn't want to complicate the diagram with what the stack would look like when inlining has occurred (this might be a fun topic to explore in a future post!).
 
 ##### There are two important things to take note of from Listing 1.4: 
 1. A copy of the `names` array is made when the `f1` function is called. <br/>
@@ -121,11 +122,8 @@ If we want to share `names` with `f1` so `f1` can modify it, we should pass the 
 
 Let's update the code from Listing 1.4 to use a pointer instead:
 ###### Listing 1.5
-<a href="http://play.golang.org/p/v3DptqwTxj" target="_blank">(Run in Go Playground)</a>
+<a href="http://play.golang.org/p/FWtGYQN8-2" target="_blank">(Run in Go Playground)</a>
 ```go
-package main
-
-
 func main() {
 	names := [2]string{"ada", "lovelace"}
 	println("names address:", &names)
@@ -134,8 +132,8 @@ func main() {
 }
 
 func f1(a *[2]string) {
-	println("a address:", &a)
 	println("a value:", a)
+	println("a address:", &a)
 	a[0] = "marie"
 
 	// Do this to prevent inlining.
@@ -143,15 +141,16 @@ func f1(a *[2]string) {
 	fmt.Sprintf("Prevent Inlining: %d", x)
 }
 
+
 ### OUTPUT:
-names address: 0x220822bf28
-value: 0x220822bf28
-a address: 0x220822bf20
+names address: 0x220832bf28
+a value: 0x220832bf28
+a address: 0x220832bf18
 marie
 ```
 In Go, we would say that `a` in function `f1` is a **pointer variable**.
 
-In Listing 1.5, we can see that the address of `a` is `0x220822bf20` and the value of `a` is the address of `names`, `0x220822bf28`. When we update the first element of the array to be "marie", we actually update the value that the pointer points to, the `names` array in `main`.
+In Listing 1.5, we can see that the address of `a` is `0x220832bf18` and the value of `a` is the address of `names`, `0x220832bf28`. When we update the first element of the array to be "marie", we actually update the value that the pointer points to, the `names` array in `main`.
 
 #### What does the call stack look like now we are using a pointer?
 Below you can see a simplified view of the call stack for the code in Listing 1.5.
