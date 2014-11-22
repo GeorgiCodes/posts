@@ -56,13 +56,13 @@ Value:0 IndexAddr: 0x220822bf28
 Value:0 IndexAddr: 0x220822bf30
 Value:0 IndexAddr: 0x220822bf38
 ```
-**NOTE:** You might be wondering why I used the `println` and `print` functions to display these addresses instead of using `fmt.Printf`. Without getting into too much detail, the Print functions from the `fmt` package uses reflection which will cause the Go compiler to create these values on the heap. Given that I show simplified stack diagrams below, I wanted to make sure you are seeing stack addresses, not heap addresses. I will continue to use the `println` function for the rest of the examples. 
+**NOTE:** You might be wondering why I used the `println` and `print` functions to display these addresses instead of using `fmt.Printf`. Without getting into too much detail, the Print functions from the `fmt` package uses reflection which will cause the Go compiler to create values on the heap. Given that I show simplified stack diagrams below, I wanted to make sure you are seeing stack addresses, not heap addresses. I will continue to use the `println` function for the rest of the examples. 
 
 Figure 1.1 below  shows how the `a` variable from Listing 1.3 looks in memory:
 ###### Figure 1.1
 ![](images/go_initialized_array.jpg)
 
-These memory addresses are in hexadecimal. On my mac, each index is located 8 bytes ahead of the last. The addresses you see on your machine may be different to the ones shown in Figure 1.1. emember, if you run these examples in the playground it’s built on a 32bit architecture. This means you will see 32bit addresses instead of 64bit address as in my examples. See [Hexadecimal to Decimal](http://www.binaryhexconverter.com/hex-to-decimal-converter) converter.
+These memory addresses are in hexadecimal. On my mac, each index is located 8 bytes ahead of the last. The addresses you see on your machine may be different to the ones shown in Figure 1.1. Remember, if you run these examples in the playground it’s built on a 32bit architecture. This means you will see 32bit addresses instead of 64bit address in my examples. See [Hexadecimal to Decimal](http://www.binaryhexconverter.com/hex-to-decimal-converter) converter.
 
 #### What does this mean?
 Creating contiguous blocks of memory has an advantage because it assists with keeping the data we are using potentially in the CPU’s caches longer. This in turn has performance benefits because the CPU doesn't have to flush the caches as often or reach all the way back into RAM to access any memory it needs. 
@@ -97,11 +97,12 @@ a value: ada lovelace
 a address: 0x220832bf08
 ada
 ```
-**NOTE:** I have included two lines at the end of the code sample in Listing 1.4 and 1.5 that prevent the compiler from inling the `f1` function. Without getting into too much detail, I did this because in Figure 1.2 and 1.3 I wanted to show a simplified view of the call stack. I didn't want to complicate the diagram with what the stack looks like after inlining occurs, however this might be a fun topic to explore in a future post!.
+* **NOTE:** I have included code at the end of the ‘f1’ function in Listing 1.4 that prevents the compiler from inling the `f1` function. Without getting into too much detail, I did this because I want to show a simplified view of the call stack for the code example without the complication of compiler optimizations. However, this might be a fun topic to explore in a future post!.*
 
-##### There are two important things to take note of from Listing 1.4: 
+##### There are three important things to take note of from Listing 1.4: 
 1. A copy of the `names` array is made when the `f1` function is called. <br/>
-1. Inside `f1`, when we change the value of the first element in `a`, we are making a change to the copy: the local variable `a` inside `f1`. <br/>
+1. The copy of `names` is assigned to the local variable `a` that is declared in the parameter list for `f1`. <br />
+1. Inside `f1` when we change the value in the first element of `a`, we are making a change to the copy of `names` and not to `names` directly. <br/>
 
 #### What does the call stack look like?
 Figure 1.2 below is a simplified view of the call stack for the code in Listing 1.4. You can see a copy of `names` is created in the `f1` stack frame and assigned to a variable called `a`, which has its own address. When `f1` returns, the stack pointer is once again pointing back to `main's` stack frame and `names` remains unchanged.
@@ -109,7 +110,7 @@ Figure 1.2 below is a simplified view of the call stack for the code in Listing 
 ###### Figure 1.2
 ![](images/call_stack_1.png)
 
-Copying the value of the array in many cases is fine, but what if the `names` array had millions of strings? The stack will need to grow very large.
+Copying the value of an array in many cases is fine, but what if the` array had millions of strings? The stack will need to grow very large.
 
 **Passing `names` by value also doesn't allow us to share its contents such that it can be modified by `f1`**. So what do we do if we want `f1` to be able to modify `names`?
 
@@ -117,8 +118,6 @@ Copying the value of the array in many cases is fine, but what if the `names` ar
 _A pointer is a variable like any other variable, whose value is always an address._ It references a location in memory where a value of a specified type is stored. Pointers can be used to share values between functions.
 
 If we want to share `names` with `f1` so `f1` can modify it, we should pass the address of `names` to `f1`. 
-
-**Remember Go is pass by value where in this example, the value is an address.**
 
 Let's update the code from Listing 1.4 to use a pointer instead:
 ###### Listing 1.5
@@ -148,9 +147,8 @@ a value: 0x220832bf28
 a address: 0x220832bf18
 marie
 ```
-In Go, we would say that `a` in function `f1` is a **pointer variable**.
-
-In Listing 1.5, we can see that the address of `a` is `0x220832bf18` and the value of `a` is the address of `names`, `0x220832bf28`. When we update the first element of the array to be "marie", we actually update the value that the pointer points to, the `names` array in `main`.
+In listing 1.5, we have now changed the code to pass the address of `names` and declared a **pointer variable** as the parameter to the `f1` function to accept that address. 
+In the output, we can see that the **address of** `a` is `0x220832bf18` and the **value of** `a` is `0x220832bf28`. Notice that the value of `a` and the address of `names` is the same. When we update the first element of the array to be "marie", we actually update the array that the `a` pointer points to, the `names` array in `main`.
 
 #### What does the call stack look like now we are using a pointer?
 Below you can see a simplified view of the call stack for the code in Listing 1.5.
@@ -159,14 +157,13 @@ Below you can see a simplified view of the call stack for the code in Listing 1.
 ![](images/call_stack_2.png)
 
 ##### By using a pointer we have achieved two things:
-1. Reduced the sized of the stack on the call to `f1`
+1. Reduced the size of the stack on the call to `f1`
 2. Changed the value that the pointer points to; the `names` variable in `main`.
 
-**NOTE:** Pointer variables in Go are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine using a 64bit architecture, the size of a word will be 8 bytes. On a 32bit architecture it is 4 bytes.
+**NOTE:** Pointer variables are the size of one [machine word](http://en.wikipedia.org/wiki/Word_(computer_architecture)). On a machine using a 64bit architecture, the size of a word will be 8 bytes. On a 32bit architecture it is 4 bytes.
 
 ### Summary
-
-This has been a brief introduction into arrays internals and pass by value in Go! We have seen that arrays in Go are contiguous in memory where the length forms part of its type. We also saw two examples of pass by value. In the first example, we pass an array as an argument and see we are actually passing a copy of that array to the function. In the second example, we learnt that when we wanted to share the array with a function, we could pass the address of the array and create a pointer variable so that the function could then modify the original array.
+This has been a brief introduction into arrays internals and pass by value in Go! We have seen that arrays in Go are contiguous in memory where the length forms part of its type. We also saw two examples of pass by value. In the first example, we pass the value of the array and see we are actually passing a copy of the array. In the second example, we pass the address of the array and see we are now sharing the array. To pass the address we must declare a pointer variable, and through the pointer variable the function can modify the shared array.
 
 If you want to get more involved in the Go community then come and join the [Gophers Slack group](http://blog.gopheracademy.com/gophers-slack-community/)!
 
