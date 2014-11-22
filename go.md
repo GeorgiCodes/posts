@@ -97,7 +97,7 @@ a value: ada lovelace
 a address: 0x220832bf08
 ada
 ```
-**NOTE:** I have included code at the end of the ‘f1’ function in Listing 1.4 that prevents the compiler from inling the `f1` function. Without getting into too much detail, I did this because I want to show a simplified view of the call stack for the code example without the complication of compiler optimizations. However, this might be a fun topic to explore in a future post!.*
+**NOTE:** I have included code at the end of the `f1` function in Listing 1.4 that prevents the compiler from inling the `f1` function. Without getting into too much detail, I did this because I want to show a simplified view of the call stack for the code example without the complication of compiler optimizations. However, this might be a fun topic to explore in a future post!.*
 
 ##### There are three important things to take note of from Listing 1.4: 
 1. A copy of the `names` array is made when the `f1` function is called. <br/>
