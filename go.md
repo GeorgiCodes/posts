@@ -12,7 +12,7 @@ Let's start off with some basics. An array in Go is a data structure that is a f
 ###### Listing 1.1
 
 ```go
-var elements [4]int
+var four [4]int
 ```
 
 In Go, when you declare a value of type `int`, then the actual size of the `int` will be determined based on the type of architecture the program is run on. In my case, I am building this program on my mac which is based on a 64bit architecture. This means each `int` will be 8 bytes long. If you build any of the examples I provide in the Go Playground, then each `int` will be 4 bytes long because the Go Playground runs on a 32bit architecture.
@@ -21,40 +21,40 @@ It is important to note that `int` is its own type and is not an alias for `int6
 One thing that surprised me when I first learnt about arrays, was that in Go the length of the array forms part of its type! The assignment in the code below will throw an error:
 
 ###### Listing 1.2
-<a href="http://play.golang.org/p/EOD78r3krR" target="_blank">(Run in Go Playground)</a>
+<a href="http://play.golang.org/p/0KCcsED8xl" target="_blank">(Run in Go Playground)</a>
 ```go
-var elements [4]int
-var longElements [8]int
+var short [4]int
+var long [8]int
 
-// ERROR: cannot use longElements (type [8]int) as type [4]int in assignment
-elements = longElements		
+// ERROR: cannot use long (type [8]int) as type [4]int in assignment
+short = long
 ```
 
 ### Arrays are stored contiguously in memory
 
 In Go, arrays are stored **contiguously** in memory. The code below prints out the memory address of the array and each element.
 ###### Listing 1.3
-<a href="http://play.golang.org/p/xqmiMKaOWF" target="_blank">(Run in Go Playground)</a>
+<a href="http://play.golang.org/p/j59BKve1js" target="_blank">(Run in Go Playground)</a>
 ```go
 package main
 
 func main() {
-	var a [4]int
+	a := [4]int{1, 2, 3, 4}
 
-	println("a addr:", &a)
+	println("Array address:", &a)
 
 	for i, e := range a {
 		print("Value: ", e)
-		println(" IndexAddr:", &a[i])
+		println(" Address:", &a[i])
 	}
 }
 
 ### OUTPUT:
-a addr: 0x220822bf20
-Value:0 IndexAddr: 0x220822bf20
-Value:0 IndexAddr: 0x220822bf28
-Value:0 IndexAddr: 0x220822bf30
-Value:0 IndexAddr: 0x220822bf38
+Array address: 0x220822bf20
+Value:1 Address: 0x220822bf20
+Value:2 Address: 0x220822bf28
+Value:3 Address: 0x220822bf30
+Value:4 Address: 0x220822bf38
 ```
 **NOTE:** You might be wondering why I used the `println` and `print` functions to display these addresses instead of using `fmt.Printf`. Without getting into too much detail, the Print functions from the `fmt` package uses reflection which will cause the Go compiler to create values on the heap. Given that I show simplified stack diagrams below, I wanted to make sure you are seeing stack addresses, not heap addresses. I will continue to use the `println` function for the rest of the examples. 
 
